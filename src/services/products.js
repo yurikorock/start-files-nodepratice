@@ -22,3 +22,7 @@ export const updateProductService = async (productId, payload) => {
     product: result,
   };
 };
+export const deleteProductService = async (productId) => {
+  const product = await ProductModel.findOneAndDelete({ _id: productId });
+  return product;
+};

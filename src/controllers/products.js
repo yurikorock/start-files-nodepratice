@@ -4,6 +4,7 @@ import {
   getProductsByIdService,
   createProductService,
   updateProductService,
+  deleteProductService,
 } from '../services/products.js';
 
 export const getAllProductsController = async (req, res) => {
@@ -50,4 +51,13 @@ export const patchProductController = async (req, res, next) => {
     message: 'Successfully patched a product!',
     data: result.product,
   });
+};
+export const deleteProductController = async (req, res, next) => {
+  const { productId } = req.params;
+  const product = await deleteProductService(productId);
+  if (!product) {
+    next(createHttpError(404, 'Product not found'));
+    return;
+  }
+  res.status(204).send();
 };
