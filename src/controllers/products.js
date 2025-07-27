@@ -7,6 +7,7 @@ import {
 
 export const getAllProductsController = async (req, res) => {
   const products = await getAllProductsService();
+
   res.json({
     status: 200,
     message: 'Successfully found products!',
