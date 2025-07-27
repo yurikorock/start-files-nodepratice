@@ -11,3 +11,14 @@ export const getProductsByIdService = (productId) => {
 export const createProductService = (body) => {
   return ProductModel.create(body);
 };
+export const updateProductService = async (productId, payload) => {
+  const result = await ProductModel.findOneAndUpdate(
+    { _id: productId },
+    payload,
+    { new: true },
+  );
+  if (!result) return null;
+  return {
+    product: result,
+  };
+};

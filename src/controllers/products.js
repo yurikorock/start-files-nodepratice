@@ -3,6 +3,7 @@ import {
   getAllProductsService,
   getProductsByIdService,
   createProductService,
+  updateProductService,
 } from '../services/products.js';
 
 export const getAllProductsController = async (req, res) => {
@@ -33,5 +34,20 @@ export const createProductController = async (req, res) => {
     status: 201,
     message: 'Successfully created a product!',
     data: product,
+  });
+};
+export const patchProductController = async (req, res, next) => {
+  const { productId } = req.params;
+
+  const result = await updateProductService(productId, req.body);
+  // console.log('productId:', result);
+  if (!result) {
+    next(createHttpError(404, 'Product not found'));
+    return;
+  }
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a product!',
+    data: result.product,
   });
 };
