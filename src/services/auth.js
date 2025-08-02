@@ -36,3 +36,7 @@ export const loginUserService = async (payload) => {
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
 };
+//логаут користувача
+export const logoutUserService = async (sessionId) => {
+  await SessionCollection.deleteOne({ _id: sessionId });
+};
