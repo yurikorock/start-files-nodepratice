@@ -10,10 +10,12 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getAllProductsController = async (req, res) => {
   const { category, minPrice, maxPrice } = parseFilterParams(req.query);
+  const userId = req.user._id;
   const products = await getAllProductsService({
     category,
     minPrice,
     maxPrice,
+    userId,
   });
   // console.log({ category, minPrice, maxPrice });
   res.json({
@@ -25,7 +27,8 @@ export const getAllProductsController = async (req, res) => {
 
 export const getProductByIdController = async (req, res) => {
   const { productId } = req.params;
-  const product = await getProductsByIdService(productId);
+  const userId = req.user._id;
+  const product = await getProductsByIdService(productId, userId);
   if (!product) {
     throw createHttpError(404, 'product not found');
   }
@@ -36,7 +39,8 @@ export const getProductByIdController = async (req, res) => {
   });
 };
 export const createProductController = async (req, res) => {
-  const product = await createProductService(req.body);
+  const userId = req.user._id;
+  const product = await createProductService({ ...req.body, userId });
   res.status(201).json({
     status: 201,
     message: 'Successfully created a product!',
@@ -45,8 +49,9 @@ export const createProductController = async (req, res) => {
 };
 export const patchProductController = async (req, res, next) => {
   const { productId } = req.params;
+  const userId = req.user._id;
 
-  const result = await updateProductService(productId, req.body);
+  const result = await updateProductService(productId, req.body, userId);
   // console.log('productId:', result);
   if (!result) {
     next(createHttpError(404, 'Product not found'));
@@ -60,7 +65,8 @@ export const patchProductController = async (req, res, next) => {
 };
 export const deleteProductController = async (req, res, next) => {
   const { productId } = req.params;
-  const product = await deleteProductService(productId);
+  const userId = req.user._id;
+  const product = await deleteProductService(productId, userId);
   if (!product) {
     next(createHttpError(404, 'Product not found'));
     return;

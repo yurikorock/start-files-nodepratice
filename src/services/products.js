@@ -1,7 +1,12 @@
 import { ProductModel } from '../db/models/Product.js';
 
-export const getAllProductsService = ({ category, minPrice, maxPrice }) => {
-  const productsQuery = ProductModel.find();
+export const getAllProductsService = ({
+  category,
+  minPrice,
+  maxPrice,
+  userId,
+}) => {
+  const productsQuery = ProductModel.find({ userId });
   if (category) {
     productsQuery.where('category').equals(category);
   }
@@ -14,16 +19,21 @@ export const getAllProductsService = ({ category, minPrice, maxPrice }) => {
   return productsQuery;
 };
 
-export const getProductsByIdService = (productId) => {
-  return ProductModel.findById(productId);
+export const getProductsByIdService = async (productId, userId) => {
+  const product = await ProductModel.findOne({
+    _id: productId,
+    userId: userId,
+  });
+  return product;
 };
 
-export const createProductService = (body) => {
-  return ProductModel.create(body);
+export const createProductService = async (body) => {
+  const product = await ProductModel.create(body);
+  return product;
 };
-export const updateProductService = async (productId, payload) => {
+export const updateProductService = async (productId, payload, userId) => {
   const result = await ProductModel.findOneAndUpdate(
-    { _id: productId },
+    { _id: productId, userId },
     payload,
     { new: true },
   );
@@ -32,7 +42,10 @@ export const updateProductService = async (productId, payload) => {
     product: result,
   };
 };
-export const deleteProductService = async (productId) => {
-  const product = await ProductModel.findOneAndDelete({ _id: productId });
+export const deleteProductService = async (productId, userId) => {
+  const product = await ProductModel.findOneAndDelete({
+    _id: productId,
+    userId: userId,
+  });
   return product;
 };
