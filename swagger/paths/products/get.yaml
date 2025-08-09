@@ -1,0 +1,37 @@
+#/swagger/paths/contacts/get.yaml
+tags:
+  - Products
+summary: Get list of products
+operationId: getProducts
+description: 'Get list of products with this endpoint'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: minPrice
+    schema:
+      type: number
+  - in: query
+    name: maxPrice
+    schema:
+      type: integer
+  - in: query
+    name: category
+    schema:
+      type: string
+      enum: ["books", "electronics", "clothing", "other"]
+      example: 'other'
+responses:
+  '200':
+    description: All products found
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: ../../components/schema/product.yaml
+
+  '401':
+    $ref: ../../components/responces/401.yaml
+  "500":
+    $ref: ../../components/responces/500.yaml

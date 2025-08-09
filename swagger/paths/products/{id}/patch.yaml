@@ -1,0 +1,69 @@
+#/swagger/paths/students/post.yaml
+
+tags:
+  - Products
+summary: Patch product
+operationId: patchProduct
+description: 'Patch a product with payload'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: productId
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598388'
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: "Product's name"
+            type: string
+            example: 'SmartTv'
+          price:
+            description: "Product's price"
+            type: number
+            example: 699.99
+          category:
+            description: "Product's category"
+            type: string
+            enum: ["books", "electronics", "clothing", "other"]
+            example: books
+          description:
+            description: "Description about product"
+            type: string
+            example: This is TV with WiFi
+
+responses:
+  '200':
+    description: Creates a product
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully patched a product!
+            data:
+              type: object
+              $ref: '../../../components/schema/product.yaml'
+  '401':
+    $ref: "../../../components/responces/401.yaml"
+  "400":
+    $ref: "../../../components/responces/400.yaml"
+  "404":
+    $ref: "../../../components/responces/404.yaml"
+  "500":
+    $ref: "../../../components/responces/500.yaml"
